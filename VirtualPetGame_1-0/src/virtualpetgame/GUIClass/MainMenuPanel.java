@@ -57,20 +57,22 @@ public class MainMenuPanel extends JPanel {
         interactButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // open interact with pet panel
+                mainFrame.showActionSelect();
             }
         });
 
         sleepButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // open sleep panel
+                mainFrame.showSleep();
             }
         });
 
-        forageButton.addActionListener(new ActionListener() {
+        /*forageButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // open forage panel
+                
             }
-        });
+        });*/
 
         pauseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

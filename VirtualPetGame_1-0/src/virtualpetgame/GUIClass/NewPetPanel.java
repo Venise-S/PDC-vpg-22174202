@@ -17,9 +17,17 @@ public class NewPetPanel extends JPanel {
     public NewPetPanel(GUIManager guiManager) {
         // Set the layout manager
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        
         // Add components to the panel
-        JLabel label = new JLabel("New Pet Panel");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(label);
+        JLabel title = new JLabel("You have found a new pet!");
+        // image of pet based on type
+        // text input name
+        // button keep pet/release - when pressed popup text with update. -> continue to main menu
+        // unless invalid input, different box shows up. -> do not continue
+        
+        
+        
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(title);
     }
 }

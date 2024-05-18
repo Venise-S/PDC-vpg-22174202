@@ -13,6 +13,7 @@ import java.util.Scanner;
  * @author stamv
  */
 public class PetManager implements Serializable {
+    // TO CHANGE TO DB
     private final Random rand = new Random();
     
     private final transient FormattingCUI fo = new FormattingCUI();
