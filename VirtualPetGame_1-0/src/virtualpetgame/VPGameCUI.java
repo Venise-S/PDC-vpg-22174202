@@ -12,37 +12,12 @@ import java.util.Scanner;
  *
  * @author stamv
  */
-public class VPGameCUI implements Serializable, GameInterface { // handles user interface and interactions with user
-
+public class VPGameCUI extends VPGame implements VPGameInterface, Serializable { // handles user interface and interactions with user
+    private FormattingCUI fo;
     private final Random rand = new Random();
-
-    // constants
-    private final int EVENTCHANCE = 3;
-    private final int MAXSTATCHANCE = 40;
-
-    // objects refferring to other classes
-    private final GameInfo game;
-    private final EventSelector ev;
-    private final PetManager pm; // contains pets[] list
-    private transient FormattingCUI fo;
-
+    
     public VPGameCUI() {
-        this.pm = new PetManager();
-        this.game = new GameInfo(10);
-        this.ev = new EventSelector(this);
-    }
-
-    // ---- getters ----
-    public GameInfo getGameInfo() {
-        return this.game;
-    }
-
-    public PetManager getPetManager() {
-        return this.pm;
-    }
-
-    public EventSelector getEventSelector() {
-        return this.ev;
+        super(); 
     }
 
     // check if inputted text is 'x'
@@ -58,42 +33,34 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
     public void menu() {
         // main menu
 
-        fo = new FormattingCUI();
-        fo.printBreak();
+
         // displays pet stats first
-        if (pm.getNumPets() == 0) {
+        if (getPetManager().getNumPets() == 0) {
             System.out.println("Welcome to Virtual Pet Game!\n");
             System.out.println("Across the wilderness you can find certain creatures that closely resemble domesticated animals. ");
             System.out.println("Don't be fooled! These creatures are far from your average cat or dog.");
             System.out.println("Your responsibility is to find and take care of these creatures. \n");
             System.out.println("Here is your first pet...");
-            fo.waitForEnter();
-            pm.newPet();
+            
+            getPetManager().newPet();
         }
-
-        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome to Virtual Pet game!\n");
 
         // give information.
-        fo.printHLine();
-        game.printInfo();
-        System.out.println("Number of pets: " + pm.getNumPets());
-        fo.printHLine();
 
-        // switch to check input then run respective method
-        boolean isValid = false;
-        while (!isValid) {
-            try {
-                System.out.println("What would you like to do?");
+        getGameInfo().printInfo();
+        System.out.println("Number of pets: " + getPetManager().getNumPets());
+
+                /**System.out.println("What would you like to do?");
                 System.out.println("1. Select a pet and choose a pet action");
                 System.out.println("2. Sleep to next day");
                 System.out.println("3. Forage for food");
-                System.out.println("4. Pause (or exit)");
-                String choice = scanner.nextLine();
-                checkIfX(choice);
+                System.out.println("4. Pause (or exit)");*/
 
-                switch (Integer.parseInt(choice)) {
+                int choice = 0;
+
+                switch (choice) {
                     case 1:
                         System.out.println("Chosen: Interact with a pet");
                         petSelectorMenu();
@@ -111,10 +78,8 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
                         pauseGame();
                         break;
                 }
-            } catch (NumberFormatException ex) {
-                System.out.println("Invalid input! Please input again:");
-            }
-        }
+            
+        
     }
 
     // from menu -> select a pet
@@ -123,8 +88,8 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
         // display pets user can select
         fo.printBreak();
         System.out.println("Select a pet by inputting the corresponding number: (x to quit)");
-        for (int i = 0; i < pm.getPets().length && pm.getPets()[i] != null; i++) {
-            System.out.println((i + 1) + ". " + pm.getPets()[i].getName());
+        for (int i = 0; i < getPetManager().getPets().length && getPetManager().getPets()[i] != null; i++) {
+            System.out.println((i + 1) + ". " + getPetManager().getPets()[i].getName());
         }
 
         boolean isValid = false;
@@ -139,9 +104,9 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
             try {
                 int petIndex = Integer.parseInt(choice) - 1;
 
-                if (petIndex >= 0 && petIndex < pm.getPets().length && pm.getPets()[petIndex] != null) {
+                if (petIndex >= 0 && petIndex < getPetManager().getPets().length && getPetManager().getPets()[petIndex] != null) {
                     isValid = true;
-                    Pet selectedPet = pm.getPets()[petIndex];
+                    Pet selectedPet = getPetManager().getPets()[petIndex];
                     System.out.println("Selected pet: " + selectedPet.getName());
                     petActionMenu(selectedPet);
                 } else {
@@ -188,12 +153,12 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
             case "1":
                 if (selectedPet.getHunger() == selectedPet.getMAXSTAT()) {
                     System.out.println(selectedPet.getName() + " is full!");
-                } else if (game.getFood() == 0) {
+                } else if (getGameInfo().getFood() == 0) {
                     System.out.println("You do not have enough food.");
                 } else {
-                    game.decreaseFood();
+                    getGameInfo().decreaseFood();
                     selectedPet.feed();
-                    System.out.println("Food storage is now at " + game.getFood());
+                    System.out.println("Food storage is now at " + getGameInfo().getFood());
                 }
                 break;
             case "2":
@@ -203,8 +168,8 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
                 selectedPet.setSpecialStat(selectedPet.getMAXSTAT()); // instead of incrementing, sets to maximum
                 break;
             case "4":
-                if (pm.getNumPets() <= 1) {
-                    pm.removePet(selectedPet);
+                if (getPetManager().getNumPets() <= 1) {
+                    getPetManager().removePet(selectedPet);
                     System.out.println("You have successfully released this pet out into the wild.");
                     fo.waitForEnter();
                     menu();
@@ -226,41 +191,40 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
     @Override
     public void sleep() {
         // sleep interface 
-        fo.printBreak();
 
-        game.setDay(game.getDay() + 1);
+        getGameInfo().setDay(getGameInfo().getDay() + 1);
 
-        synchronized (pm.getPets()) {
-            for (int i = 0; i < pm.getPets().length && pm.getPets()[i] != null; i++) {
-                boolean didLevel = pm.getPets()[i].levelUp();
+        synchronized (getPetManager().getPets()) {
+            for (int i = 0; i < getPetManager().getPets().length && getPetManager().getPets()[i] != null; i++) {
+                boolean didLevel = getPetManager().getPets()[i].levelUp();
                 if (didLevel == true) {
-                    System.out.println(pm.getPets()[i].getName() + " leveled up to Level " + pm.getPets()[i].getLevel());
+                    System.out.println(getPetManager().getPets()[i].getName() + " leveled up to Level " + getPetManager().getPets()[i].getLevel());
                 }
 
-                pm.getPets()[i].setHunger(pm.getPets()[i].getHunger() - rand.nextInt(MAXSTATCHANCE));
-                pm.getPets()[i].setThirst(pm.getPets()[i].getThirst() - rand.nextInt(MAXSTATCHANCE));
-                pm.getPets()[i].setSpecialStat(pm.getPets()[i].getSpecialStat() - rand.nextInt(MAXSTATCHANCE));
-                pm.getPets()[i].setAge(pm.getPets()[i].getAge() + 1);
+                getPetManager().getPets()[i].setHunger(getPetManager().getPets()[i].getHunger() - rand.nextInt(getMAXSTATCHANCE()));
+                getPetManager().getPets()[i].setThirst(getPetManager().getPets()[i].getThirst() - rand.nextInt(getMAXSTATCHANCE()));
+                getPetManager().getPets()[i].setSpecialStat(getPetManager().getPets()[i].getSpecialStat() - rand.nextInt(getMAXSTATCHANCE()));
+                getPetManager().getPets()[i].setAge(getPetManager().getPets()[i].getAge() + 1);
             }
         }
 
-        int Evchance = rand.nextInt(EVENTCHANCE);
+        int Evchance = rand.nextInt(getEVENTCHANCE());
 
         // if 0, no event to occur
         if (Evchance == 0) {
             // autosave game
-            pm.stopStatDecrease();
+            getPetManager().stopStatDecrease();
             GameSave.saveGame(this, "savegame.dat");
-            pm.startStatDecrease();
+            getPetManager().startStatDecrease();
             menu();
         }
         System.out.println("While you were sleeping, a random event has occurred!");
-        ev.eventSwitch();
+        getEventSelector().eventSwitch();
 
         // autosave game
-        pm.stopStatDecrease(); // used this instead of synchronized
+        getPetManager().stopStatDecrease(); // used this instead of synchronized
         GameSave.saveGame(this, "savegame.dat");
-        pm.startStatDecrease();
+        getPetManager().startStatDecrease();
 
         menu();
     }
@@ -271,7 +235,7 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
         Scanner scan = new Scanner(System.in);
 
         fo.printBreak();
-        if (game.isForagedToday() == true) {
+        if (getGameInfo().isForagedToday() == true) {
             System.out.println("You have already foraged for today!");
             menu();
         }
@@ -283,7 +247,7 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
         if (ans.compareToIgnoreCase("y") == 0) {
             if (rand.nextInt(2) == 0) {
                 System.out.println("Search successful!");
-                pm.newPet();
+                getPetManager().newPet();
             } else {
                 System.out.println("You couldn't find a pet.");
             }
@@ -291,17 +255,17 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
             System.out.println("You decide to not look for a pet.");
         }
 
-        int num = (pm.getNumPets() + 1) * game.FOOD_MULTIPLIER;
+        int num = (getPetManager().getNumPets() + 1) * getGameInfo().FOOD_MULTIPLIER;
         System.out.println("You go out to forage for food for your pets.");
         fo.printHLine();
 
-        System.out.println("Previous Amount: " + game.getFood());
-        game.setFood(game.getFood() + num);
-        System.out.println("New Amount: " + game.getFood());
+        System.out.println("Previous Amount: " + getGameInfo().getFood());
+        getGameInfo().setFood(getGameInfo().getFood() + num);
+        System.out.println("New Amount: " + getGameInfo().getFood());
 
         fo.waitForEnter();
         fo.printHLine();
-        int Evchance = rand.nextInt(EVENTCHANCE);
+        int Evchance = rand.nextInt(getEVENTCHANCE());
 
         // chance for no event to occur
         if (Evchance != 0) {
@@ -310,7 +274,7 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
 
         // forage action specific line
         System.out.println("While you were out foraging, a random event has occurred!");
-        ev.eventSwitch();
+        getEventSelector().eventSwitch();
 
         menu();
     }
@@ -321,7 +285,7 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
         fo.printHLine();
         Scanner scan = new Scanner(System.in);
 
-        pm.stopStatDecrease();
+        getPetManager().stopStatDecrease();
         System.out.println("Game paused!");
         System.out.println("Enter 'exit' to save and exit the game.");
         System.out.println("Enter 'delete' to delete the current save and exit the game. ");
@@ -334,7 +298,7 @@ public class VPGameCUI implements Serializable, GameInterface { // handles user 
         } else if (input.trim().compareToIgnoreCase("delete") == 0) {
             GameSave.deleteGame("savegame.dat");
         } else {
-            pm.startStatDecrease();
+            getPetManager().startStatDecrease();
             menu();
         }
     }

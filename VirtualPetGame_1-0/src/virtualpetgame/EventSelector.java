@@ -13,28 +13,27 @@ import java.util.Scanner;
  *
  * @author stamv
  */
-public class EventSelector implements Serializable {
-    private Random rand = new Random();
-    private VPGameCUI vpGame;
+
+public class EventSelector<E extends VPGame> implements Serializable {
+    private final Random rand = new Random();
+    private E vpGame;
 
     public HashSet<Event> eventList;
     private transient final int RANDPETCHANCE = 4; // the lower the likelier
 
-    public EventSelector(VPGameCUI vpGame) {
+    public EventSelector(E vpGame) {
         this.vpGame = vpGame;
         this.eventList = new HashSet<>();
         insEventSet();
     }
     
-        public void updateVirtualPetGame(VPGameCUI vpGame) {
+    public void updateVirtualPetGame(E vpGame) {
         this.vpGame = vpGame;
     }
 
     public void insEventSet() {
-        
         Event newPetEv = new Event("New pet", "A pet has approached you!");
-        Event loseF = new Event("Lose food", "Your backpack was ramsacked and you lost 50% food.");
-        //Event loseH = new Event("Hungry pets", "All your pets got hungry (hunger -10)");
+        Event loseF = new Event("Lose food", "Your backpack was ransacked and you lost 50% food.");
         Event addFood = new Event("Gain food","Your pets brought you some food.");
 
         eventList.add(newPetEv);
@@ -43,7 +42,6 @@ public class EventSelector implements Serializable {
     }
 
     private Event pickRandEvent() {
-        
         int randomIndex = rand.nextInt(eventList.size());
         int currentIndex = 0;
         for (Event event : eventList) {
@@ -93,7 +91,4 @@ public class EventSelector implements Serializable {
         GameInfo game = vpGame.getGameInfo();
         game.setFood(game.getFood() + rand.nextInt(8)+2);
     }
-    
-    
-
 }
