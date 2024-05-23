@@ -11,9 +11,9 @@ import java.io.Serializable;
  * @author stamv
  */
 public class Feline extends Pet implements Serializable {
-    
+
     private final int MINLVLUP = 180; // 60% of 300
-    
+
     private int cleanliness;
 
     public Feline(String name, int hunger, int thirst, int cleanliness) {
@@ -27,12 +27,11 @@ public class Feline extends Pet implements Serializable {
         this.cleanliness = cleanliness;
         if (this.cleanliness <= 0) {
             this.cleanliness = 0;
-        }
-        else if (this.cleanliness >= 100) {
+        } else if (this.cleanliness >= 100) {
             this.cleanliness = 100;
         }
     }
-    
+
     @Override
     public int getSpecialStat() {
         return cleanliness;
@@ -69,7 +68,5 @@ public class Feline extends Pet implements Serializable {
                 + "    `-.-' \\ )-`( , o o)\n"
                 + "          `-    \\`_`\"'-");
     }
-
-    
 
 }

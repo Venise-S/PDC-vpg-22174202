@@ -2,18 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package virtualpetgame;
+package todelete;
 
 import java.io.Serializable;
 import java.util.Random;
 import java.util.Scanner;
+import virtualpetgame.GameSave;
+import virtualpetgame.Pet;
+import virtualpetgame.VPGame;
+import virtualpetgame.VPGameInterface;
 
 /**
  *
  * @author stamv
  */
 public class VPGameCUI extends VPGame implements VPGameInterface, Serializable { // handles user interface and interactions with user
-    private FormattingCUI fo;
+    // class will no longer be used(to delete)
     private final Random rand = new Random();
     
     public VPGameCUI() {
@@ -88,8 +92,8 @@ public class VPGameCUI extends VPGame implements VPGameInterface, Serializable {
         // display pets user can select
         fo.printBreak();
         System.out.println("Select a pet by inputting the corresponding number: (x to quit)");
-        for (int i = 0; i < getPetManager().getPets().length && getPetManager().getPets()[i] != null; i++) {
-            System.out.println((i + 1) + ". " + getPetManager().getPets()[i].getName());
+        for (int i = 0; i < getPetManager().getPetsArray().length && getPetManager().getPetsArray()[i] != null; i++) {
+            System.out.println((i + 1) + ". " + getPetManager().getPetsArray()[i].getName());
         }
 
         boolean isValid = false;
@@ -104,9 +108,9 @@ public class VPGameCUI extends VPGame implements VPGameInterface, Serializable {
             try {
                 int petIndex = Integer.parseInt(choice) - 1;
 
-                if (petIndex >= 0 && petIndex < getPetManager().getPets().length && getPetManager().getPets()[petIndex] != null) {
+                if (petIndex >= 0 && petIndex < getPetManager().getPetsArray().length && getPetManager().getPetsArray()[petIndex] != null) {
                     isValid = true;
-                    Pet selectedPet = getPetManager().getPets()[petIndex];
+                    Pet selectedPet = getPetManager().getPetsArray()[petIndex];
                     System.out.println("Selected pet: " + selectedPet.getName());
                     petActionMenu(selectedPet);
                 } else {
@@ -194,17 +198,17 @@ public class VPGameCUI extends VPGame implements VPGameInterface, Serializable {
 
         getGameInfo().setDay(getGameInfo().getDay() + 1);
 
-        synchronized (getPetManager().getPets()) {
-            for (int i = 0; i < getPetManager().getPets().length && getPetManager().getPets()[i] != null; i++) {
-                boolean didLevel = getPetManager().getPets()[i].levelUp();
+        synchronized (getPetManager().getPetsArray()) {
+            for (int i = 0; i < getPetManager().getPetsArray().length && getPetManager().getPetsArray()[i] != null; i++) {
+                boolean didLevel = getPetManager().getPetsArray()[i].levelUp();
                 if (didLevel == true) {
-                    System.out.println(getPetManager().getPets()[i].getName() + " leveled up to Level " + getPetManager().getPets()[i].getLevel());
+                    System.out.println(getPetManager().getPetsArray()[i].getName() + " leveled up to Level " + getPetManager().getPetsArray()[i].getLevel());
                 }
 
-                getPetManager().getPets()[i].setHunger(getPetManager().getPets()[i].getHunger() - rand.nextInt(getMAXSTATCHANCE()));
-                getPetManager().getPets()[i].setThirst(getPetManager().getPets()[i].getThirst() - rand.nextInt(getMAXSTATCHANCE()));
-                getPetManager().getPets()[i].setSpecialStat(getPetManager().getPets()[i].getSpecialStat() - rand.nextInt(getMAXSTATCHANCE()));
-                getPetManager().getPets()[i].setAge(getPetManager().getPets()[i].getAge() + 1);
+                getPetManager().getPetsArray()[i].setHunger(getPetManager().getPetsArray()[i].getHunger() - rand.nextInt(getMAXSTATCHANCE()));
+                getPetManager().getPetsArray()[i].setThirst(getPetManager().getPetsArray()[i].getThirst() - rand.nextInt(getMAXSTATCHANCE()));
+                getPetManager().getPetsArray()[i].setSpecialStat(getPetManager().getPetsArray()[i].getSpecialStat() - rand.nextInt(getMAXSTATCHANCE()));
+                getPetManager().getPetsArray()[i].setAge(getPetManager().getPetsArray()[i].getAge() + 1);
             }
         }
 

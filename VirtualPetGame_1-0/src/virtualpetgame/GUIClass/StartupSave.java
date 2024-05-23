@@ -10,7 +10,7 @@ import java.io.File;
 import javax.swing.*;
 import virtualpetgame.GameSave;
 import virtualpetgame.VPGame;
-import virtualpetgame.VPGameCUI;
+import todelete.VPGameCUI;
 
 /**
  *

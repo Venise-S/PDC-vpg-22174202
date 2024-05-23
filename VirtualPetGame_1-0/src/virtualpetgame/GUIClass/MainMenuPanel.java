@@ -21,7 +21,6 @@ public class MainMenuPanel extends JPanel {
     private final JLabel descLabel;
     private final JButton interactButton;
     private final JButton sleepButton;
-    private final JButton forageButton;
     private final JButton pauseButton;
 
     public MainMenuPanel(GUIManager mainFrame) {
@@ -30,14 +29,12 @@ public class MainMenuPanel extends JPanel {
         titleLabel = new JLabel("Virtual Pet Game");
         descLabel = new JLabel("Please select your next action:");
         interactButton = new JButton("Select a pet and choose a pet action");
-        forageButton = new JButton("Forage for food");
         sleepButton = new JButton("Sleep to next day");
         pauseButton = new JButton("Pause game");
 
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         interactButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        forageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         sleepButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         pauseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -50,14 +47,12 @@ public class MainMenuPanel extends JPanel {
         add(Box.createVerticalStrut(10));
         add(sleepButton);
         add(Box.createVerticalStrut(10));
-        add(forageButton);
-        add(Box.createVerticalStrut(10));
         add(pauseButton);
 
         interactButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // open interact with pet panel
-                mainFrame.showActionSelect();
+                mainFrame.showPetSelector();
             }
         });
 
@@ -67,12 +62,6 @@ public class MainMenuPanel extends JPanel {
                 mainFrame.showSleep();
             }
         });
-
-        /*forageButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-            }
-        });*/
 
         pauseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

@@ -5,67 +5,121 @@
 package virtualpetgame;
 
 import java.io.Serializable;
+import java.sql.*;
 import java.util.Random;
-import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author stamv
  */
 public class PetManager implements Serializable {
-    // TO CHANGE TO DB
-    private final Random rand = new Random();
-    
-    private final transient FormattingCUI fo = new FormattingCUI();
-    
-    private final int MAX_NAME_LENGTH = 30;
+
+    private Connection connection;
     private final int MAX_PETS = 15;
-    private final Pet[] pets;
-    
     private boolean running;
 
     public PetManager() {
-        this.pets = new Pet[MAX_PETS];
+        try {
+            // Connect to the embedded Java DB (Derby)
+            connection = DriverManager.getConnection("jdbc:derby:petDB;create=true");
+
+            // Create the pets table if it doesn't exist
+            createTableIfNotExists();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Pet[] getPets() {
-        return this.pets;
+    private void createTableIfNotExists() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("CREATE TABLE pets (id INT PRIMARY KEY, name VARCHAR(255), type VARCHAR(255), hunger INT, thirst INT, specialStat INT)");
+        }
+    }
+
+    /*public void addPet(String name, String type) {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO pets (id, name, type, hunger, thirst, specialStat) VALUES (?, ?, ?, ?, ?, ?)")) {
+            // Check if there's space for a new pet
+            if (getNumPets() < MAX_PETS) {
+                // Generate a unique ID (you might want to improve this)
+                int id = getNumPets() + 1;
+                statement.setInt(1, id);
+                statement.setString(2, name);
+                statement.setString(3, type);
+                statement.setInt(4, 100); // initial hunger
+                statement.setInt(5, 100); // initial thirst
+                statement.setInt(6, 100); // initial special stat
+                statement.executeUpdate();
+            } else {
+                JOptionPane.showMessageDialog(null, "You are at the maximum number of pets.", "Pet Released", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL error");
+        }
+    }*/
+    public void addPet(Pet pet) {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO pets (id, name, type, hunger, thirst, specialStat) VALUES (?, ?, ?, ?, ?, ?)")) {
+            if (getNumPets() < MAX_PETS) {
+                int id = getNumPets() + 1;
+                statement.setInt(1, id);
+                statement.setString(2, pet.getName());
+                statement.setString(3, pet.getType());
+                statement.setInt(4, 100); // initial hunger
+                statement.setInt(5, 100); // initial thirst
+                statement.setInt(6, 100); // initial special stat
+
+            } else {
+                JOptionPane.showMessageDialog(null, "You are at the maximum number of pets.", "Pet Released", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL error");
+        }
+    }
+
+    public void removePet(int id) {
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE id = ?")) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getNumPets() {
-        int count = 0;
-
-        for (Pet pet : pets) {
-            if (pet != null) {
-                count++;
+        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM pets")) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return count;
+        return 0;
     }
 
-    public void removePet(Pet petToRemove) {
-        // remove selected pet from pets[] then move all pets above index down (remove null)
-        int indexToRemove = -1;
-        for (int i = 0; i < pets.length; i++) {
-            if (pets[i] == petToRemove) {
-                indexToRemove = i;
-                break;
+    public Pet[] getPetsArray() { // do not write to pets array
+        Pet[] pets = new Pet[MAX_PETS];
+        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT * FROM pets")) {
+            int i = 0;
+            while (resultSet.next() && i < MAX_PETS) {
+                String name = resultSet.getString("name");
+                String type = resultSet.getString("type");
+                int hunger = resultSet.getInt("hunger");
+                int thirst = resultSet.getInt("thirst");
+                int specialStat = resultSet.getInt("specialStat");
+
+                if (type.compareToIgnoreCase("Canine") == 0) {
+                    pets[i++] = new Canine(name, hunger, thirst, specialStat);
+                } else if (type.compareToIgnoreCase("Feline") == 0) {
+                    pets[i++] = new Feline(name, hunger, thirst, specialStat);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        if (indexToRemove != -1) {
-            // Remove the pet at indexToRemove
-            for (int i = indexToRemove; i < pets.length - 1; i++) {
-                pets[i] = pets[i + 1];
-            }
-            pets[pets.length - 1] = null; // Set the last element to null
-        }
+        return pets;
     }
 
-    public void renamePet() {
-        System.out.println("Which pet would you like to rename?");
-    }
-
-public void startStatDecrease() {
+    public void startStatDecrease() {
         if (!running) {
             running = true;
             Thread thread = new Thread(() -> {
@@ -87,88 +141,19 @@ public void startStatDecrease() {
     }
 
     private void decrementPetStats() {
-        if (pets.length == 0) {
-        } else {
-            for (int i = 0; i < pets.length && pets[i] != null; i++) {
-                pets[i].setHunger(pets[i].getHunger() - 1);
-                pets[i].setThirst(pets[i].getThirst() - 1);
-                pets[i].setSpecialStat(pets[i].getSpecialStat() - 1);
-            }
+        String updateQuery = "UPDATE pets SET hunger = hunger - 1, thirst = thirst - 1, specialStat = specialStat - 1 WHERE hunger > 0 OR thirst > 0 OR specialStat > 0";
+        try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
-    
-        public void newPet() {
-        // runs during random event and first running game
-        // gives two types of pet, canine or feline
-        fo.printBreak();
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("You have found a new pet!");
-
-        // if at maximum amount of pets, exit this method
-        if (getNumPets() == getPets().length - 1) {
-            System.out.println("You have too many pets and cannot receive a new one. Max: " + MAX_PETS);
-            System.out.println("Automatically releasing this pet.");
-            return;
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        String input;
-        boolean validInput = false;
-
-        // define random pet
-        int randomNumber = rand.nextInt(2);
-        Pet newPet;
-        if (randomNumber == 0) {
-            newPet = new Feline("", 100, 100, 100); // at full stats
-        } else {
-            newPet = new Canine("", 100, 100, 100);
-        }
-
-        newPet.printIcon();
-
-        // ask user if they want to keep pet
-        if (getNumPets() > 0) {
-            while (!validInput) {
-                System.out.println("Do you want to keep this pet? (y/n)");
-                input = scanner.nextLine().trim().toLowerCase();
-                switch (input) {
-                    case "y":
-                    case "yes":
-                        System.out.println("You have decided to keep the pet!");
-                        validInput = true;
-                        break;
-                    case "n":
-                    case "no":
-                        System.out.println("You have decided not to keep the pet.");
-                        return;
-                    default:
-                        System.out.println("Invalid input. Please enter 'y' for yes or 'n' for no.");
-                        break;
-                }
-            }
-        }
-
-        // prompt user to enter pet name
-        System.out.println("Enter the name of the new " + newPet.getType() + " pet:");
-        String name = "";
-        Scanner scan = new Scanner(System.in);
-        while (name.trim().isEmpty()) {
-            name = scan.nextLine().trim();
-            if (name.isEmpty() || name.length() == MAX_NAME_LENGTH) {
-                System.out.println("Please enter a valid name:");
-            }
-        }
-        newPet.setName(name);
-
-        // update pets
-        for (int i = 0; i < getPets().length; i++) {
-            if (getPets()[i] == null) {
-                getPets()[i] = newPet;
-                break;
-            }
-        }
-
-        System.out.println(newPet.getName() + " has been transported to your home.");
-        fo.waitForEnter();
     }
 }

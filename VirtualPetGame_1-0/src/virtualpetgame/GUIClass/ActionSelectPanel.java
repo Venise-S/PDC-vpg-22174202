@@ -8,16 +8,20 @@ import java.awt.Component;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import virtualpetgame.Pet;
 
 /**
  *
  * @author stamv
  */
 public class ActionSelectPanel extends JPanel {
-    public ActionSelectPanel(GUIManager guiManager) {
-        // Set the layout manager
+    public ActionSelectPanel(GUIManager guiManager, Pet selectedPet) {
+        // checking code for if null pet selected. 
+        // if yes send error message then return to main menu
+        
+        
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        // Add components to the panel
+
         JLabel label = new JLabel("Action Select");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);

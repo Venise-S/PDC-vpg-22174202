@@ -4,9 +4,9 @@
  */
 package virtualpetgame;
 
+import todelete.VPGameCUI;
 import virtualpetgame.GUIClass.GUIManager;
-import java.io.File;
-import virtualpetgame.GUIClass.StartupSave;
+
 
 /**
  *
@@ -20,7 +20,7 @@ public class StartupGame {
             vpGame.getEventSelector().updateVirtualPetGame(vpGame);
             vpGame.getPetManager().startStatDecrease();
             
-            // Start the GUI
+            // starting of GUI
             GUIManager newGUI = new GUIManager(vpGame);
         
     }

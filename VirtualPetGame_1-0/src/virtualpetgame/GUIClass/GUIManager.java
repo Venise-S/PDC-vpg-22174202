@@ -7,7 +7,7 @@ package virtualpetgame.GUIClass;
 import java.awt.CardLayout;
 import java.io.Serializable;
 import javax.swing.*;
-import virtualpetgame.VPGame;
+import virtualpetgame.*;
 
 /**
  *
@@ -19,9 +19,17 @@ public class GUIManager implements Serializable {
     private final JPanel panel;
     private final CardLayout cardLayout;
     private VPGame game;
+    private Pet selectedPet = null;
+    
+    public VPGame getVPGame() {
+        return this.game;
+    }
 
     public GUIManager(VPGame game) {
         this.game = game;
+        
+        testPets();
+        
         frame = new JFrame("Virtual Pet Game");
         cardLayout = new CardLayout();
         panel = new JPanel(cardLayout);
@@ -35,7 +43,7 @@ public class GUIManager implements Serializable {
         MainMenuPanel mainMenu = new MainMenuPanel(this);
         PausePanel pausePanel = new PausePanel(this);
         PetSelectorPanel petSelectorPanel = new PetSelectorPanel(this, game);
-        ActionSelectPanel actionSelectPanel = new ActionSelectPanel(this);
+        ActionSelectPanel actionSelectPanel = new ActionSelectPanel(this,selectedPet);
         SleepPanel sleepPanel = new SleepPanel(this);
         NewPetPanel newPetPanel = new NewPetPanel(this);
 
@@ -72,6 +80,11 @@ public class GUIManager implements Serializable {
 
     public void showNewPet() {
         cardLayout.show(panel, "newPet");
+    }
+    
+    public void testPets() {
+        Feline pet1 = new Feline("name",100,100,100);
+        game.getPetManager().addPet(pet1);
     }
 
 }

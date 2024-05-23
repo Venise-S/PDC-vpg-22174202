@@ -21,30 +21,30 @@ import virtualpetgame.VPGame;
  */
 public class PetSelectorPanel extends JPanel {
     private GUIManager guiManager;
-    private VPGame game;  // Add a reference to the VPGame to access the pet list
+    private VPGame game;
 
     public PetSelectorPanel(GUIManager guiManager, VPGame game) {
         this.guiManager = guiManager;
-        this.game = game;  // Initialize the VPGame reference
+        this.game = game;  
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JLabel label = new JLabel("Select a pet by clicking on the button:");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);
 
-        // Display the list of pets with buttons
-        Pet[] pets = game.getPetManager().getPets();
+        // displaying of pets user is able to select
+        Pet[] pets = game.getPetManager().getPetsArray();
         for (int i = 0; i < pets.length && pets[i] != null; i++) {
             JButton petButton = new JButton(pets[i].getName());
             petButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-            int petIndex = i;  // Capture the index for use in the ActionListener
+            int petIndex = i;
             petButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     Pet selectedPet = pets[petIndex];
                     JOptionPane.showMessageDialog(null, "Selected pet: " + selectedPet.getName());
-                    game.petActionMenu(selectedPet);  // Call the petActionMenu method with the selected pet
-                    guiManager.showActionSelect();  // Switch to the action select panel
+                    game.petActionMenu(selectedPet); 
+                    guiManager.showActionSelect(); 
                 }
             });
             add(petButton);
@@ -55,7 +55,7 @@ public class PetSelectorPanel extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                guiManager.showMainMenu();  // Return to the main menu
+                guiManager.showMainMenu();  // return to the main menu
             }
         });
         add(backButton);

@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package virtualpetgame;
+import todelete.VPGameCUI;
 import java.io.File;
 import java.util.Scanner;
 

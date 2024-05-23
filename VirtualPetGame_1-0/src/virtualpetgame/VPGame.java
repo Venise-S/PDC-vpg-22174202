@@ -20,10 +20,10 @@ public abstract class VPGame implements Serializable {
 
     private final GameInfo game;
     private final EventSelector ev;
-    private final PetManager getPetManager; // contains pets[] list
+    private final PetManager petManager; // contains pets[] list
 
     public VPGame() {
-        this.getPetManager = new PetManager();
+        this.petManager = new PetManager();
         this.game = new GameInfo(10);
         this.ev = new EventSelector(this);
     }
@@ -34,7 +34,7 @@ public abstract class VPGame implements Serializable {
     }
 
     public PetManager getPetManager() {
-        return this.getPetManager;
+        return this.petManager;
     }
 
     public EventSelector getEventSelector() {

@@ -79,7 +79,7 @@ public class EventSelector<E extends VPGame> implements Serializable {
     }
 
     public void newPetEv() {
-        vpGame.getPetManager().newPet();
+
     }
 
     public void loseF() {
