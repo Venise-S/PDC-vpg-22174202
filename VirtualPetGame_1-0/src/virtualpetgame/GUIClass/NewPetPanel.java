@@ -24,13 +24,15 @@ public class NewPetPanel extends JPanel {
 
         // create a blank pet with type determined
         Pet newPet = createPet();
-        
+
         JLabel title = new JLabel("You have found a new pet!");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(title);
 
-        // change based on pet type
-        JLabel petImage = new JLabel(new ImageIcon(newPet.getType() + "img.png"));
+        // display image of respective pet
+                ImageIcon petIcon = new ImageIcon(getClass().getResource("/" + newPet.getType() + "img.png"));
+        JLabel petImage = new JLabel(petIcon);
+
         petImage.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(petImage);
 
@@ -67,6 +69,8 @@ public class NewPetPanel extends JPanel {
                 if (petName.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a name for the pet.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
+                    // update pet name
+                    newPet.setName(petName);
                     // update game state to keep the pet with the given name
                     guiManager.getVPGame().getPetManager().addPet(newPet);
                     JOptionPane.showMessageDialog(null, "You have kept the pet named " + petName + "!", "Pet Kept", JOptionPane.INFORMATION_MESSAGE);
@@ -78,26 +82,22 @@ public class NewPetPanel extends JPanel {
         releasePet.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "You have released the pet.", "Pet Released", JOptionPane.INFORMATION_MESSAGE);
-                guiManager.showMainMenu();
+                if (guiManager.getVPGame().getPetManager().getPetsArray().length > 0) {
+                    JOptionPane.showMessageDialog(null, "You have released the pet.", "Pet Released", JOptionPane.INFORMATION_MESSAGE);
+                    guiManager.showMainMenu();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cannot release when you have no pets.");
+                }
             }
         });
     }
-    
-        private Pet createPet() {
-        Random rand = new Random();
+
+    private Pet createPet() {
         int num = rand.nextInt(2);
-        
-        
         if (num == 0) {
-            Canine pet = new Canine("",100,100,100);
-            return pet;
-        }
-        else {
-            Feline pet = new Feline("",100,100,100);
-            return pet;
+            return new Canine("placeholder", 100, 100, 100);
+        } else {
+            return new Feline("", 100, 100, 100);
         }
     }
-
-
 }

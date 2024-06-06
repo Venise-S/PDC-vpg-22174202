@@ -5,7 +5,6 @@
 package virtualpetgame.GUIClass;
 
 import java.awt.CardLayout;
-import java.io.Serializable;
 import javax.swing.*;
 import virtualpetgame.*;
 
@@ -13,23 +12,22 @@ import virtualpetgame.*;
  *
  * @author stamv
  */
-public class GUIManager implements Serializable {
+
+public class GUIManager {
 
     private final JFrame frame;
     private final JPanel panel;
     private final CardLayout cardLayout;
-    private VPGame game;
+    private final VPGame game;
     private Pet selectedPet = null;
-    
+
     public VPGame getVPGame() {
         return this.game;
     }
 
     public GUIManager(VPGame game) {
         this.game = game;
-        
-        testPets();
-        
+
         frame = new JFrame("Virtual Pet Game");
         cardLayout = new CardLayout();
         panel = new JPanel(cardLayout);
@@ -43,19 +41,22 @@ public class GUIManager implements Serializable {
         MainMenuPanel mainMenu = new MainMenuPanel(this);
         PausePanel pausePanel = new PausePanel(this);
         PetSelectorPanel petSelectorPanel = new PetSelectorPanel(this, game);
-        ActionSelectPanel actionSelectPanel = new ActionSelectPanel(this,selectedPet);
         SleepPanel sleepPanel = new SleepPanel(this);
         NewPetPanel newPetPanel = new NewPetPanel(this);
 
         panel.add(mainMenu, "mainMenu");
         panel.add(pausePanel, "pausePanel");
         panel.add(petSelectorPanel, "petSelector");
-        panel.add(actionSelectPanel, "actionSelect");
         panel.add(sleepPanel, "sleep");
         panel.add(newPetPanel, "newPet");
 
         frame.setVisible(true);
-        showMainMenu();
+        System.out.println(game.getPetManager().getNumPets());
+        if (game.getPetManager().getNumPets() == 0) {
+            showNewPet();
+        } else {
+            showMainMenu();
+        }
     }
 
     public void showMainMenu() {
@@ -63,10 +64,16 @@ public class GUIManager implements Serializable {
     }
 
     public void showPetSelector() {
+        panel.remove(panel.getComponent(panel.getComponentCount() - 1)); // Remove the old PetSelectorPanel
+        PetSelectorPanel newPetSelectorPanel = new PetSelectorPanel(this, game);
+        panel.add(newPetSelectorPanel, "petSelector"); // Add the new PetSelectorPanel
         cardLayout.show(panel, "petSelector");
     }
 
-    public void showActionSelect() {
+    public void showActionSelect(Pet selectedPet) {
+        panel.remove(panel.getComponent(panel.getComponentCount() - 1)); // Remove the old ActionSelectPanel
+        ActionSelectPanel actionSelectPanel = new ActionSelectPanel(this, selectedPet);
+        panel.add(actionSelectPanel, "actionSelect"); // Add the new ActionSelectPanel
         cardLayout.show(panel, "actionSelect");
     }
 
@@ -79,12 +86,9 @@ public class GUIManager implements Serializable {
     }
 
     public void showNewPet() {
+        panel.remove(panel.getComponent(panel.getComponentCount() - 1)); // Ensure only one instance of NewPetPanel is displayed
+        NewPetPanel newPetPanel = new NewPetPanel(this);
+        panel.add(newPetPanel, "newPet");
         cardLayout.show(panel, "newPet");
     }
-    
-    public void testPets() {
-        Feline pet1 = new Feline("name",100,100,100);
-        game.getPetManager().addPet(pet1);
-    }
-
 }

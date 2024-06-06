@@ -14,81 +14,36 @@ import java.util.Scanner;
  * @author stamv
  */
 
-public class EventSelector<E extends VPGame> implements Serializable {
+public class EventSelector<E extends VPGame> {
     private final Random rand = new Random();
     private E vpGame;
 
-    public HashSet<Event> eventList;
-    private transient final int RANDPETCHANCE = 4; // the lower the likelier
-
     public EventSelector(E vpGame) {
         this.vpGame = vpGame;
-        this.eventList = new HashSet<>();
-        insEventSet();
+          
     }
     
-    public void updateVirtualPetGame(E vpGame) {
+        public void updateVirtualPetGame(E vpGame) {
         this.vpGame = vpGame;
     }
-
-    public void insEventSet() {
-        Event newPetEv = new Event("New pet", "A pet has approached you!");
-        Event loseF = new Event("Lose food", "Your backpack was ransacked and you lost 50% food.");
-        Event addFood = new Event("Gain food","Your pets brought you some food.");
-
-        eventList.add(newPetEv);
-        eventList.add(loseF);
-        eventList.add(addFood);
-    }
-
-    private Event pickRandEvent() {
-        int randomIndex = rand.nextInt(eventList.size());
-        int currentIndex = 0;
-        for (Event event : eventList) {
-            if (currentIndex == randomIndex) {
-                return event;
-            }
-            currentIndex++;
+    
+    public String randEvent() {
+        int chosenInt = rand.nextInt(3);
+        String eventDesc = "";
+        switch (chosenInt) {
+            case 0:
+                eventDesc = "a new pet has approached you!";
+                // will run new pet panel in gui
+                break;
+            case 1:
+                eventDesc = "your pets went extra hungry. -50%";
+                vpGame.getPetManager().loseHunger();
+                break;
+            case 2:
+                eventDesc = "your pets went extra thirsty. -50%";
+                vpGame.getPetManager().loseThirst();
         }
-        return null;
-    }
-
-    public void eventSwitch() {
-        Event myEvent = pickRandEvent();
-
-        System.out.println(myEvent.getName() + ": ");
-        System.out.println(myEvent.getDesc());
-
-        Scanner sc = new Scanner(System.in);
-        System.out.println("\n(press enter to continue)");
-        sc.nextLine();
-        
-        switch (myEvent.getName().toLowerCase()) {
-            case "new pet":
-                newPetEv();
-                break;
-            case "lose food":
-                loseF();
-                break;
-            case "gain food":
-                addFood();
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void newPetEv() {
-
-    }
-
-    public void loseF() {
-        GameInfo game = vpGame.getGameInfo();
-        game.setFood(game.getFood()/2);
+        return eventDesc;
     }
     
-    public void addFood() {
-        GameInfo game = vpGame.getGameInfo();
-        game.setFood(game.getFood() + rand.nextInt(8)+2);
-    }
 }

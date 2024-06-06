@@ -4,7 +4,6 @@
  */
 package virtualpetgame;
 
-import todelete.VPGameCUI;
 import virtualpetgame.GUIClass.GUIManager;
 
 
@@ -16,7 +15,7 @@ import virtualpetgame.GUIClass.GUIManager;
 public class StartupGame {
     public static void startGUI() {
 
-            VPGame vpGame = new VPGameCUI();
+            VPGame vpGame = new VPGame();
             vpGame.getEventSelector().updateVirtualPetGame(vpGame);
             vpGame.getPetManager().startStatDecrease();
             

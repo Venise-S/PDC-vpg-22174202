@@ -11,9 +11,8 @@ import virtualpetgame.GUIClass.GUIManager;
  *
  * @author stamv
  */
-public abstract class VPGame implements Serializable {
+public class VPGame implements Serializable {
 
-    // FUNCTIONALITY SIDE OF PROGRAMME
     // constants
     private final int EVENTCHANCE = 3;
     private final int MAXSTATCHANCE = 40;
@@ -21,8 +20,10 @@ public abstract class VPGame implements Serializable {
     private final GameInfo game;
     private final EventSelector ev;
     private final PetManager petManager; // contains pets[] list
+    //private final GUIManager guiManager;
 
     public VPGame() {
+        //this.guiManager = new GUIManager(this);
         this.petManager = new PetManager();
         this.game = new GameInfo(10);
         this.ev = new EventSelector(this);
@@ -49,14 +50,12 @@ public abstract class VPGame implements Serializable {
         return MAXSTATCHANCE;
     }
 
-    // Method to be called by GUI for pet selection actions
+    // method to be called by GUI for pet selection actions
     public void petActionMenu(Pet selectedPet) {
-        // Implement the actions to be taken when a pet is selected
+        // implement the actions to be taken when a pet is selected
         System.out.println("Selected pet: " + selectedPet.getName());
-        // Further actions can be added here
     }
 
-    // Ensure to pass the game instance to GUI components that need it
     public void initializeGUI() {
         GUIManager guiManager = new GUIManager(this);
         guiManager.showMainMenu();
