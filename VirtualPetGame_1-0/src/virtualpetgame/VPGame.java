@@ -19,11 +19,9 @@ public class VPGame implements Serializable {
 
     private final GameInfo game;
     private final EventSelector ev;
-    private final PetManager petManager; // contains pets[] list
-    //private final GUIManager guiManager;
+    private final PetManager petManager; // contains pet db management
 
     public VPGame() {
-        //this.guiManager = new GUIManager(this);
         this.petManager = new PetManager();
         this.game = new GameInfo(10);
         this.ev = new EventSelector(this);
@@ -52,10 +50,10 @@ public class VPGame implements Serializable {
 
     // method to be called by GUI for pet selection actions
     public void petActionMenu(Pet selectedPet) {
-        // implement the actions to be taken when a pet is selected
         System.out.println("Selected pet: " + selectedPet.getName());
     }
 
+    // method to start gui
     public void initializeGUI() {
         GUIManager guiManager = new GUIManager(this);
         guiManager.showMainMenu();

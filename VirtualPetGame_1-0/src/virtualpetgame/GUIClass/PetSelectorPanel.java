@@ -28,6 +28,7 @@ public class PetSelectorPanel extends JPanel {
         JLabel label = new JLabel("Select a pet by clicking on the button:");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);
+        add(Box.createVerticalStrut(20));
 
         Pet[] pets = game.getPetManager().getPetsArray();
         if (pets != null) {
@@ -46,6 +47,7 @@ public class PetSelectorPanel extends JPanel {
                     }
                 });
                 add(petButton);
+                add(Box.createVerticalStrut(10)); // spacing between elements
             }
         }
 

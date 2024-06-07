@@ -43,6 +43,7 @@ public class SleepPanel extends JPanel {
         Random rand = new Random();
         int eventChance = rand.nextInt(2);
         if (eventChance == 0) {
+            guiManager.showMainMenu();
             return;
         }
 
@@ -52,7 +53,7 @@ public class SleepPanel extends JPanel {
         if (eventChosen.contains("a new pet")) {
             guiManager.showNewPet();
         } else {
-            guiManager.showMainMenu();  // Return to the main menu only if no event occurs
+            guiManager.showMainMenu();  // Return to the main menu if other event picked
         }
     }
 }

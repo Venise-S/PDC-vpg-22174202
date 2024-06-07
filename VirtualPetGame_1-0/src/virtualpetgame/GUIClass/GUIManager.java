@@ -12,7 +12,6 @@ import virtualpetgame.*;
  *
  * @author stamv
  */
-
 public class GUIManager {
 
     private final JFrame frame;
@@ -63,6 +62,15 @@ public class GUIManager {
         cardLayout.show(panel, "mainMenu");
     }
 
+    public void showSleep() {
+        cardLayout.show(panel, "sleep");
+    }
+
+    public void showPause() {
+        cardLayout.show(panel, "pausePanel");
+    }
+
+    // needs to be updated when displayed. is removed and added
     public void showPetSelector() {
         panel.remove(panel.getComponent(panel.getComponentCount() - 1)); // Remove the old PetSelectorPanel
         PetSelectorPanel newPetSelectorPanel = new PetSelectorPanel(this, game);
@@ -75,14 +83,6 @@ public class GUIManager {
         ActionSelectPanel actionSelectPanel = new ActionSelectPanel(this, selectedPet);
         panel.add(actionSelectPanel, "actionSelect"); // Add the new ActionSelectPanel
         cardLayout.show(panel, "actionSelect");
-    }
-
-    public void showSleep() {
-        cardLayout.show(panel, "sleep");
-    }
-
-    public void showPause() {
-        cardLayout.show(panel, "pausePanel");
     }
 
     public void showNewPet() {

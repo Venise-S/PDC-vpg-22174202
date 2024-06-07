@@ -13,8 +13,6 @@ import java.awt.*;
  *
  * @author stamv
  */
-
-
 public class MainMenuPanel extends JPanel {
 
     private final JLabel titleLabel;
@@ -23,52 +21,52 @@ public class MainMenuPanel extends JPanel {
     private final JButton sleepButton;
     private final JButton pauseButton;
 
-    public MainMenuPanel(GUIManager mainFrame) {
+    public MainMenuPanel(GUIManager guiManager) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         titleLabel = new JLabel("Virtual Pet Game");
-        descLabel = new JLabel("Please select your next action:");
-        interactButton = new JButton("Select a pet and choose a pet action");
-        sleepButton = new JButton("Sleep to next day");
-        pauseButton = new JButton("Pause game");
-
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        interactButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        sleepButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pauseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         add(Box.createVerticalStrut(20));
         add(titleLabel);
+
+        descLabel = new JLabel("Please select your next action:");
+        descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(Box.createVerticalStrut(10));
         add(descLabel);
+
+        interactButton = new JButton("Select a pet and choose a pet action");
+        interactButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(Box.createVerticalStrut(20));
         add(interactButton);
+
+        sleepButton = new JButton("Sleep to next day");
+        sleepButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(Box.createVerticalStrut(10));
         add(sleepButton);
+
+        pauseButton = new JButton("Pause game");
+        pauseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(Box.createVerticalStrut(10));
         add(pauseButton);
 
         interactButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // open interact with pet panel
-                mainFrame.showPetSelector();
+                guiManager.showPetSelector();
             }
         });
 
         sleepButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // open sleep panel
-                mainFrame.showSleep();
+                guiManager.showSleep();
             }
         });
 
         pauseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                mainFrame.showPause();
+                guiManager.showPause();
             }
         });
     }
 }
-
-

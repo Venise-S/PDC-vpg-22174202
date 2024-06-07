@@ -74,7 +74,7 @@ public class ActionSelectPanel extends JPanel {
         });
         add(giveWaterButton);
 
-        // Action button functionality
+        // button functionality
         JButton specialActionButton = new JButton(
                 selectedPet.getType().equalsIgnoreCase("Canine") ? "Play" : "Pamper"
         );
@@ -83,10 +83,14 @@ public class ActionSelectPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedPet.setSpecialStat(selectedPet.getSpecialStat() + 50);
-                JOptionPane.showMessageDialog(null, selectedPet.getName() + " enjoyed the "
-                        + (selectedPet.getType().equals("Canine") ? "pampering." : "playing."));
+                if (selectedPet.getType().equals("Canine")) {
+                    JOptionPane.showMessageDialog(null, selectedPet.getName() + " enjoyed the playing.");
+                } else {
+                    JOptionPane.showMessageDialog(null, selectedPet.getName() + " enjoyed the pampering.");
+                }
                 updateStats();
             }
+
         });
         add(specialActionButton);
 
@@ -112,7 +116,7 @@ public class ActionSelectPanel extends JPanel {
         });
         add(mainMenuButton);
 
-        // Start the timer to update stats periodically
+        // start timer to update stats
         startStatUpdateTimer();
     }
 
@@ -142,7 +146,7 @@ public class ActionSelectPanel extends JPanel {
             specialStatLabel.setText("Cleanliness: " + selectedPet.getSpecialStat());
         }
 
-        // Refresh the panel to show updated stats
+        // repaint panel so stats are updated
         revalidate();
         repaint();
     }
