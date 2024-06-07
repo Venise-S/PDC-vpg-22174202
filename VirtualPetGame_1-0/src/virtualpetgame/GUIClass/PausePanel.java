@@ -54,7 +54,7 @@ public class PausePanel extends JPanel {
         resetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // reset db
-                guiManager.getVPGame().getPetManager().createTable();
+                guiManager.getVPGame().getPetManager().initializeDatabase();
                 JOptionPane.showMessageDialog(null, "Save has been deleted.");
                 System.exit(0);
             }
