@@ -4,21 +4,19 @@
  */
 package virtualpetgame;
 
-import java.io.Serializable;
 import java.sql.*;
 import java.util.Arrays;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author stamv
  */
-public class PetManager implements Serializable {
+public class PetManager {
 
     private Connection connection;
     private final int MAX_PETS = 15;
-    public boolean running;
+    public boolean running; // stats of each pet decrement by 1 every few seconds
 
     public PetManager() {
         try {
