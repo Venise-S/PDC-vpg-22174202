@@ -4,17 +4,15 @@
  */
 package virtualpetgame;
 
-import java.io.Serializable;
 import java.sql.*;
 import java.util.Arrays;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author stamv
  */
-public class PetManager implements Serializable {
+public class PetManager {
 
     private Connection connection;
     private final int MAX_PETS = 15;
@@ -22,44 +20,41 @@ public class PetManager implements Serializable {
 
     public PetManager() {
         try {
-            connection = DriverManager.getConnection("jdbc:derby:petDB;create=true");
-
+            String dbUrl = "jdbc:derby:" + System.getProperty("user.home") + "/Downloads/22174202-veniseDB/petDB;create=true";
+            connection = DriverManager.getConnection(dbUrl);
+            initializeDatabase();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void checkExistedTable(String name) {
+    public void initializeDatabase() {
+        // prevent db from using table before it exists
         try {
-            DatabaseMetaData dbmd = connection.getMetaData();
-            try (Statement statement = connection.createStatement(); ResultSet resultSet = dbmd.getTables(null, null, null, new String[]{"TABLE"})) {
-                while (resultSet.next()) {
-                    String tableName = resultSet.getString("TABLE_NAME");
-                    if (tableName.equalsIgnoreCase(name)) {
-                        try {
-                            System.out.println(name);
-                            String deleteTable = "DROP TABLE " + name;
-                            statement.executeUpdate(deleteTable);
-                            System.out.println(name + " deleted");
-                        } catch (SQLException e) {
-                            System.err.println("Error dropping table: " + e.getMessage());
-                        }
-                    }
-                }
+            if (!tableExists("pets")) {
+                createTable();
             }
         } catch (SQLException e) {
-            System.err.println("Error getting table metadata: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    public void createTable() {
-        checkExistedTable("pets");
+    private boolean tableExists(String tableName) throws SQLException {
+        DatabaseMetaData dbmd = connection.getMetaData();
+        try (ResultSet resultSet = dbmd.getTables(null, null, tableName.toUpperCase(), null)) {
+            return resultSet.next();
+        }
+    }
+
+    private void createTable() {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE TABLE pets (id INT PRIMARY KEY, name VARCHAR(255), type VARCHAR(255), hunger INT, thirst INT, specialStat INT)");
         } catch (SQLException e) {
             System.err.println("Error creating table: " + e.getMessage());
         }
     }
+
+    // Other methods...
 
     public void addPet(Pet pet) {
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO pets (id, name, type, hunger, thirst, specialStat) VALUES (?, ?, ?, ?, ?, ?)")) {
@@ -180,7 +175,6 @@ public class PetManager implements Serializable {
     }
 
     private void decrementPetStats() {
-
         String updateQuery = "UPDATE pets SET hunger = hunger - 1, thirst = thirst - 1, specialStat = specialStat - 1 WHERE hunger > 1 OR thirst > 1 OR specialStat > 1";
         try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
             statement.executeUpdate();
@@ -218,7 +212,7 @@ public class PetManager implements Serializable {
         }
     }
 
-// all pets lose 50% thirst
+    // all pets lose 50% thirst
     public void loseThirst() {
         String updateQuery = "UPDATE pets SET thirst = thirst / 2 WHERE thirst > 0";
         try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
@@ -232,5 +226,4 @@ public class PetManager implements Serializable {
             updatePet(pet);
         }
     }
-
 }
