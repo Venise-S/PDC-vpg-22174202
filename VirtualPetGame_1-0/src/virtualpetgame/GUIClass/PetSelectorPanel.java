@@ -5,50 +5,61 @@
 package virtualpetgame.GUIClass;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.*;
+import java.awt.event.*;
 import virtualpetgame.Pet;
-import virtualpetgame.VPGame;
 
 /**
  *
  * @author stamv
  */
 
-public class PetSelectorPanel extends JPanel {
-    private GUIManager guiManager;
-    private VPGame game;
 
-    public PetSelectorPanel(GUIManager guiManager, VPGame game) {
+public class PetSelectorPanel extends JPanel {
+
+    private GUIManager guiManager;
+
+    public PetSelectorPanel(GUIManager guiManager) {
         this.guiManager = guiManager;
-        this.game = game;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        displayLabel();
+        displayPetButtons();
+        displayBackButton();
+    }
+
+    private void displayLabel() {
         JLabel label = new JLabel("Select a pet by clicking on the button:");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);
+    }
 
-        Pet[] pets = game.getPetManager().getPetsArray();
+    private void displayPetButtons() {
+        Pet[] pets = guiManager.getVPGame().getPetManager().getPetsArray();
         if (pets != null) {
             for (Pet pet : pets) {
                 if (pet == null) {
                     break;
                 }
-                JButton petButton = new JButton(pet.getName());
-                petButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-                petButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JOptionPane.showMessageDialog(null, "Selected pet: " + pet.getName());
-                        game.petActionMenu(pet);
-                        guiManager.showActionSelect(pet);
-                    }
-                });
-                add(petButton);
+                addButtonForPet(pet);
             }
         }
+    }
 
+    private void addButtonForPet(Pet pet) {
+        JButton petButton = new JButton(pet.getName());
+        petButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        petButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Selected pet: " + pet.getName());
+                guiManager.showActionSelect(pet);
+            }
+        });
+        add(petButton);
+    }
+
+    private void displayBackButton() {
         JButton backButton = new JButton("Back");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.addActionListener(new ActionListener() {
@@ -60,6 +71,3 @@ public class PetSelectorPanel extends JPanel {
         add(backButton);
     }
 }
-
-
-

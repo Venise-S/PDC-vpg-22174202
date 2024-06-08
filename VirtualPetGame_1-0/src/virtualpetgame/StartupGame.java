@@ -6,26 +6,19 @@ package virtualpetgame;
 
 import virtualpetgame.GUIClass.GUIManager;
 
-
 /**
  *
  *
  * @author stamv
  */
 public class StartupGame {
-    public static void startGUI() {
-
-            VPGame vpGame = new VPGame();
-            vpGame.getEventSelector().updateVirtualPetGame(vpGame);
-            vpGame.getPetManager().startStatDecrease();
-            
-            // starting of GUI
-            GUIManager newGUI = new GUIManager(vpGame);
-        
-    }
 
     public static void main(String[] args) {
-        startGUI();
+        VPGame vpGame = new VPGame();
+        vpGame.getEventSelector().updateVirtualPetGame(vpGame);
+        vpGame.getPetManager().startStatDecrease();
+
+        // starting of GUI
+        GUIManager newGUI = new GUIManager(vpGame);
     }
 }
-

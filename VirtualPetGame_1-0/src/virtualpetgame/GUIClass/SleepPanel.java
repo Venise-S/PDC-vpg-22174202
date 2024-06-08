@@ -22,37 +22,42 @@ public class SleepPanel extends JPanel {
         this.guiManager = guiManager;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        displayLabel();
+        displayBackButton();
+    }
+
+    private void displayLabel() {
         JLabel label = new JLabel("Sleep");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);
+    }
 
-        // Back button
+    private void displayBackButton() {
         JButton backButton = new JButton("To next day");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(backButton);
 
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getEvent();
+                handleSleepEvent();
             }
         });
+        add(backButton);
     }
 
-    public void getEvent() {
+    private void handleSleepEvent() {
         Random rand = new Random();
-        int eventChance = rand.nextInt(2);
+        int eventChance = rand.nextInt(3);
         if (eventChance == 0) {
-            return;
-        }
-
-        String eventChosen = guiManager.getVPGame().getEventSelector().randEvent();
-        // String eventChosen = "a new pet has approached you!";
-        JOptionPane.showMessageDialog(null, "While you were sleeping, " + eventChosen);
-        if (eventChosen.contains("a new pet")) {
-            guiManager.showNewPet();
+            guiManager.showMainMenu();
         } else {
-            guiManager.showMainMenu();  // Return to the main menu only if no event occurs
+            String eventChosen = guiManager.getVPGame().getEventSelector().randEvent();
+            JOptionPane.showMessageDialog(null, "While you were sleeping, " + eventChosen);
+            if (eventChosen.contains("a new pet")) {
+                guiManager.showNewPet();
+            } else {
+                guiManager.showMainMenu();
+            }
         }
     }
 }

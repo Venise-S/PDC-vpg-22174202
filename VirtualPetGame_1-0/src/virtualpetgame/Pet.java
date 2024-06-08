@@ -4,8 +4,6 @@
  */
 package virtualpetgame;
 
-import java.io.Serializable;
-
 /**
  *
  * @author stamv
@@ -17,10 +15,8 @@ public abstract class Pet {
 
     private String type;
     private String name;
-    private int level;
     private int hunger;
     private int thirst;
-    private int age;
 
     private transient PetManager petManager; // Add a reference to PetManager
 
@@ -28,8 +24,6 @@ public abstract class Pet {
         this.name = name;
         this.hunger = hunger;
         this.thirst = thirst;
-        this.age = 1;
-        this.level = 1;
     }
 
     public void setPetManager(PetManager petManager) {
@@ -51,15 +45,6 @@ public abstract class Pet {
 
     public void setName(String name) {
         this.name = name;
-        updatePetInDatabase();
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
         updatePetInDatabase();
     }
 
@@ -91,15 +76,6 @@ public abstract class Pet {
         updatePetInDatabase();
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-        updatePetInDatabase();
-    }
-
     public void feed() {
         setHunger(this.hunger + INCRNUM);
     }
@@ -110,16 +86,6 @@ public abstract class Pet {
 
     public abstract void setSpecialStat(int num);
 
-    public boolean levelUp() {
-        if (this.getHunger() + this.getThirst() >= 120) {
-            this.setLevel(this.getLevel() + 1);
-            return true;
-        }
-        return false;
-    }
-
-    public abstract void printStats();
-    public abstract void printIcon();
     public abstract int getSpecialStat();
 
     private void updatePetInDatabase() {

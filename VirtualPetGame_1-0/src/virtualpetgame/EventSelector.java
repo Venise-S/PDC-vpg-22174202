@@ -4,10 +4,7 @@
  */
 package virtualpetgame;
 
-import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Scanner;
 
 /**
  *
