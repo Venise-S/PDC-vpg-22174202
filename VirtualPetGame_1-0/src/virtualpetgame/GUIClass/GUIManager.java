@@ -12,14 +12,12 @@ import virtualpetgame.*;
  *
  * @author stamv
  */
-
 public class GUIManager {
 
-    private final JFrame frame;
-    private final JPanel panel;
-    private final CardLayout cardLayout;
     private final VPGame game;
-    private Pet selectedPet = null;
+    private JFrame frame;
+    private JPanel panel;
+    private CardLayout cardLayout;
 
     public VPGame getVPGame() {
         return this.game;
@@ -28,19 +26,11 @@ public class GUIManager {
     public GUIManager(VPGame game) {
         this.game = game;
 
-        frame = new JFrame("Virtual Pet Game");
-        cardLayout = new CardLayout();
-        panel = new JPanel(cardLayout);
-
-        frame.setSize(800, 500);
-        frame.setTitle("Virtual Pet Game");
-        frame.setLocation(500, 500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(panel);
+        setupFrame();
 
         MainMenuPanel mainMenu = new MainMenuPanel(this);
         PausePanel pausePanel = new PausePanel(this);
-        PetSelectorPanel petSelectorPanel = new PetSelectorPanel(this, game);
+        PetSelectorPanel petSelectorPanel = new PetSelectorPanel(this);
         SleepPanel sleepPanel = new SleepPanel(this);
         NewPetPanel newPetPanel = new NewPetPanel(this);
 
@@ -53,10 +43,27 @@ public class GUIManager {
         frame.setVisible(true);
         System.out.println(game.getPetManager().getNumPets());
         if (game.getPetManager().getNumPets() == 0) {
-            showNewPet();
+            showNewUserIntro();
         } else {
             showMainMenu();
         }
+    }
+
+    private void setupFrame() {
+        frame = new JFrame("Virtual Pet Game");
+        cardLayout = new CardLayout();
+        panel = new JPanel(cardLayout);
+
+        frame.setSize(800, 500);
+        frame.setTitle("Virtual Pet Game");
+        frame.setLocation(500, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(panel);
+    }
+    
+    public void showNewUserIntro() {
+        JOptionPane.showMessageDialog(null, "Welcome to Virtual Pet Game. Here you can care for Feline and Canine pets. You'll get started with one now!", "Welcom", JOptionPane.INFORMATION_MESSAGE);
+        showNewPet();
     }
 
     public void showMainMenu() {
@@ -65,7 +72,7 @@ public class GUIManager {
 
     public void showPetSelector() {
         panel.remove(panel.getComponent(panel.getComponentCount() - 1)); // Remove the old PetSelectorPanel
-        PetSelectorPanel newPetSelectorPanel = new PetSelectorPanel(this, game);
+        PetSelectorPanel newPetSelectorPanel = new PetSelectorPanel(this);
         panel.add(newPetSelectorPanel, "petSelector"); // Add the new PetSelectorPanel
         cardLayout.show(panel, "petSelector");
     }

@@ -14,9 +14,10 @@ import javax.swing.JOptionPane;
  */
 public class PetManager {
 
+    // for managing pets database
     private Connection connection;
     private final int MAX_PETS = 15;
-    public boolean running;
+    private boolean running;
 
     public PetManager() {
         try {
@@ -24,8 +25,12 @@ public class PetManager {
             connection = DriverManager.getConnection(dbUrl);
             initializeDatabase();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("sql error: " + e.getMessage());
         }
+    }
+    
+    public Connection getConnection() {
+        return this.connection;
     }
 
     public void initializeDatabase() {
@@ -35,11 +40,19 @@ public class PetManager {
                 createTable();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("sql error: " + e.getMessage());
         }
     }
 
-    private boolean tableExists(String tableName) throws SQLException {
+    public void resetDatabase() {
+        try (Connection connection = DriverManager.getConnection("jdbc:derby:" + System.getProperty("user.home") + "/Downloads/22174202-veniseDB/petDB;create=true"); Statement statement = connection.createStatement()) {
+            statement.executeUpdate("DROP TABLE pets");
+        } catch (SQLException e) {
+            System.err.println("sql error: " + e.getMessage());
+        }
+    }
+
+    public boolean tableExists(String tableName) throws SQLException {
         DatabaseMetaData dbmd = connection.getMetaData();
         try (ResultSet resultSet = dbmd.getTables(null, null, tableName.toUpperCase(), null)) {
             return resultSet.next();
@@ -50,11 +63,9 @@ public class PetManager {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE TABLE pets (id INT PRIMARY KEY, name VARCHAR(255), type VARCHAR(255), hunger INT, thirst INT, specialStat INT)");
         } catch (SQLException e) {
-            System.err.println("Error creating table: " + e.getMessage());
+            System.out.println("sql error: " + e.getMessage());
         }
     }
-
-    // Other methods...
 
     public void addPet(Pet pet) {
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO pets (id, name, type, hunger, thirst, specialStat) VALUES (?, ?, ?, ?, ?, ?)")) {
@@ -73,7 +84,7 @@ public class PetManager {
                 JOptionPane.showMessageDialog(null, "You are at the maximum number of pets.", "Pet Released", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (SQLException e) {
-            System.out.println("SQL error: " + e.getMessage());
+            System.out.println("sql error: " + e.getMessage());
         }
     }
 
@@ -87,7 +98,7 @@ public class PetManager {
             statement.setString(6, pet.getName());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("sql error: " + e.getMessage());
         }
     }
 
@@ -96,7 +107,7 @@ public class PetManager {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("sql error: " + e.getMessage());
         }
     }
 
@@ -106,7 +117,7 @@ public class PetManager {
                 return resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("sql error: " + e.getMessage());
         }
         return 0;
     }
@@ -115,21 +126,17 @@ public class PetManager {
         Pet[] pets = new Pet[MAX_PETS];
         int i = 0;
 
-        if (connection == null) {
-            System.err.println("DB connection error");
-            return null;
-        }
-
         try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT * FROM pets")) {
+            // loop through all pets in db
             while (resultSet.next() && i < MAX_PETS) {
+                // get values from db
                 String name = resultSet.getString("name");
                 String type = resultSet.getString("type");
                 int hunger = resultSet.getInt("hunger");
                 int thirst = resultSet.getInt("thirst");
                 int specialStat = resultSet.getInt("specialStat");
 
-                System.out.println("Retrieved pet from DB: name=" + name + ", type=" + type + ", hunger=" + hunger + ", thirst=" + thirst + ", specialStat=" + specialStat);
-
+                // set pet to strings got
                 Pet pet;
                 switch (type.toLowerCase()) {
                     case "canine":
@@ -139,15 +146,16 @@ public class PetManager {
                         pet = new Feline(name, hunger, thirst, specialStat);
                         break;
                     default:
-                        System.err.println("Unknown pet type: " + type);
+                        System.err.println("pet type error");
                         continue;
                 }
 
                 pet.setPetManager(this);
+                // add to array
                 pets[i++] = pet;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("sql error: " + e.getMessage());
         }
 
         return Arrays.copyOf(pets, i);
@@ -158,11 +166,11 @@ public class PetManager {
             running = true;
             Thread thread = new Thread(() -> {
                 while (running) {
-                    decrementPetStats();
+                    decrementStats();
                     try {
                         Thread.sleep(10000); // sleeping for 10 seconds
                     } catch (InterruptedException e) {
-                        System.err.println("Error: Thread sleep failed.");
+                        System.err.println("error: thread sleep failed.");
                     }
                 }
             });
@@ -174,12 +182,13 @@ public class PetManager {
         running = false;
     }
 
-    private void decrementPetStats() {
+    public void decrementStats() {
+        // -1 to all stats
         String updateQuery = "UPDATE pets SET hunger = hunger - 1, thirst = thirst - 1, specialStat = specialStat - 1 WHERE hunger > 1 OR thirst > 1 OR specialStat > 1";
         try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("sql error: " + e.getMessage());
         }
 
         for (Pet pet : getPetsArray()) {
@@ -193,37 +202,27 @@ public class PetManager {
                 connection.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("sql error: " + e.getMessage());
         }
     }
 
     //all pets lose 50% hunger
     public void loseHunger() {
-        String updateQuery = "UPDATE pets SET hunger = hunger / 2 WHERE hunger > 0";
-        try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        for (Pet pet : getPetsArray()) {
-            pet.setHunger(pet.getHunger() / 2);
-            updatePet(pet);
-        }
+        decreaseStat("hunger");
     }
 
     // all pets lose 50% thirst
     public void loseThirst() {
-        String updateQuery = "UPDATE pets SET thirst = thirst / 2 WHERE thirst > 0";
+        decreaseStat("thirst");
+    }
+
+    // decrease based on stat given
+    private void decreaseStat(String stat) {
+        String updateQuery = "UPDATE pets SET " + stat + " = " + stat + " / 2 WHERE " + stat + " > 1";
         try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        for (Pet pet : getPetsArray()) {
-            pet.setThirst(pet.getThirst() / 2);
-            updatePet(pet);
+            System.out.println("sql error: " + e.getMessage());
         }
     }
 }
