@@ -46,10 +46,12 @@ public class NewPetPanel extends JPanel {
         }
     }
 
+    // methods to show labels and buttons
     private void displayTitleLabel() {
         JLabel title = new JLabel("You have found a new pet!");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(title);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayPetImage() {
@@ -57,12 +59,14 @@ public class NewPetPanel extends JPanel {
         JLabel petImage = new JLabel(petIcon);
         petImage.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(petImage);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayNameTextLabel() {
         JLabel nameText = new JLabel("Name: ");
         nameText.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(nameText);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayNameField() {
@@ -70,12 +74,14 @@ public class NewPetPanel extends JPanel {
         nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, nameField.getPreferredSize().height));
         nameField.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(nameField);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayQuestionLabel() {
         JLabel question = new JLabel("Do you want to keep this pet?");
         question.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(question);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayButtonPanel() {

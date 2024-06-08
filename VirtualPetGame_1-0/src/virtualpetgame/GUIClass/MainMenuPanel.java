@@ -27,17 +27,18 @@ public class MainMenuPanel extends JPanel {
         displayPauseButton(guiManager);
     }
 
+    // show labels and buttons
     private void displayTitleLabel() {
         JLabel titleLabel = new JLabel("Virtual Pet Game");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(Box.createVerticalStrut(20));
+        add(Box.createVerticalStrut(guiManager.STRUT_MID_PX));
         add(titleLabel);
     }
 
     private void displayDescLabel() {
         JLabel descLabel = new JLabel("Please select your next action:");
         descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(Box.createVerticalStrut(10));
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
         add(descLabel);
     }
 
@@ -50,7 +51,7 @@ public class MainMenuPanel extends JPanel {
                 mainFrame.showPetSelector();
             }
         });
-        add(Box.createVerticalStrut(20));
+        add(Box.createVerticalStrut(guiManager.STRUT_MID_PX));
         add(interactButton);
     }
 
@@ -63,7 +64,7 @@ public class MainMenuPanel extends JPanel {
                 mainFrame.showSleep();
             }
         });
-        add(Box.createVerticalStrut(10));
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
         add(sleepButton);
     }
 
@@ -75,7 +76,7 @@ public class MainMenuPanel extends JPanel {
                 mainFrame.showPause();
             }
         });
-        add(Box.createVerticalStrut(10));
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
         add(pauseButton);
     }
 }

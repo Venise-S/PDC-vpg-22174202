@@ -10,22 +10,25 @@ import java.util.Random;
  *
  * @author stamv
  */
-
 public class EventSelector<E extends VPGame> {
-    private final Random rand = new Random();
+
     private E vpGame;
+    
+    private final Random rand = new Random();
+    private final int numEvents = 3;
 
     public EventSelector(E vpGame) {
         this.vpGame = vpGame;
-          
+
     }
-    
-        public void updateVirtualPetGame(E vpGame) {
+
+    public void updateVirtualPetGame(E vpGame) {
         this.vpGame = vpGame;
     }
-    
+
+    // generate random event, run respective code in pet manager and return string
     public String randEvent() {
-        int chosenInt = rand.nextInt(3);
+        int chosenInt = rand.nextInt(numEvents);
         String eventDesc = "";
         switch (chosenInt) {
             case 0:
@@ -42,5 +45,5 @@ public class EventSelector<E extends VPGame> {
         }
         return eventDesc;
     }
-    
+
 }

@@ -64,6 +64,7 @@ public class ActionSelectPanel extends JPanel {
         JLabel petName = new JLabel(selectedPet.getName());
         petName.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(petName);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayStats() {
@@ -79,8 +80,11 @@ public class ActionSelectPanel extends JPanel {
         specialStatLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         add(hungerLabel);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
         add(thirstLabel);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
         add(specialStatLabel);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void updateStatLabels() {
@@ -117,6 +121,7 @@ public class ActionSelectPanel extends JPanel {
         JLabel label = new JLabel("Select an action for " + selectedPet.getName() + ":");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayFeedButton() {
@@ -131,6 +136,7 @@ public class ActionSelectPanel extends JPanel {
             }
         });
         add(feedButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayWaterButton() {
@@ -145,6 +151,7 @@ public class ActionSelectPanel extends JPanel {
             }
         });
         add(giveWaterButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displaySpecialActButton() {
@@ -169,6 +176,7 @@ public class ActionSelectPanel extends JPanel {
             }
         });
         add(specialActionButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayBackButton() {
@@ -183,6 +191,7 @@ public class ActionSelectPanel extends JPanel {
             }
         });
         add(backButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     // exit to main menu
@@ -198,5 +207,6 @@ public class ActionSelectPanel extends JPanel {
             }
         });
         add(mainMenuButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 }

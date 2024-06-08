@@ -21,7 +21,10 @@ public class PetManager {
 
     public PetManager() {
         try {
-            String dbUrl = "jdbc:derby:" + System.getProperty("user.home") + "/Downloads/22174202-veniseDB/petDB;create=true";
+            // for running in jar file: saves db to fixed location
+            /* String dbUrl = "jdbc:derby:" + System.getProperty("user.home") + "/Downloads/22174202-veniseDB/petDB;create=true";*/
+            // for running in netbeans:
+            String dbUrl = "jdbc:derby:petDB;create=true";
             connection = DriverManager.getConnection(dbUrl);
             initializeDatabase();
         } catch (SQLException e) {
@@ -44,6 +47,7 @@ public class PetManager {
         }
     }
 
+    // drops pet table
     public void resetDatabase() {
         try (Connection connection = DriverManager.getConnection("jdbc:derby:" + System.getProperty("user.home") + "/Downloads/22174202-veniseDB/petDB;create=true"); Statement statement = connection.createStatement()) {
             statement.executeUpdate("DROP TABLE pets");
@@ -52,6 +56,7 @@ public class PetManager {
         }
     }
 
+    // return true if table exists
     public boolean tableExists(String tableName) throws SQLException {
         DatabaseMetaData dbmd = connection.getMetaData();
         try (ResultSet resultSet = dbmd.getTables(null, null, tableName.toUpperCase(), null)) {
@@ -59,6 +64,7 @@ public class PetManager {
         }
     }
 
+    // create pets table
     private void createTable() {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE TABLE pets (id INT PRIMARY KEY, name VARCHAR(255), type VARCHAR(255), hunger INT, thirst INT, specialStat INT)");
@@ -67,6 +73,7 @@ public class PetManager {
         }
     }
 
+    // add pet to db based on given pet
     public void addPet(Pet pet) {
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO pets (id, name, type, hunger, thirst, specialStat) VALUES (?, ?, ?, ?, ?, ?)")) {
             if (getNumPets() < MAX_PETS) {
@@ -88,6 +95,7 @@ public class PetManager {
         }
     }
 
+    // update given pet to db
     public void updatePet(Pet pet) {
         try (PreparedStatement statement = connection.prepareStatement("UPDATE pets SET name = ?, type = ?, hunger = ?, thirst = ?, specialStat = ? WHERE name = ?")) {
             statement.setString(1, pet.getName());
@@ -102,6 +110,7 @@ public class PetManager {
         }
     }
 
+    // remove pet based on given id
     public void removePet(int id) {
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE id = ?")) {
             statement.setInt(1, id);
@@ -111,6 +120,7 @@ public class PetManager {
         }
     }
 
+    // returns int of number of pets
     public int getNumPets() {
         try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM pets")) {
             if (resultSet.next()) {
@@ -122,6 +132,7 @@ public class PetManager {
         return 0;
     }
 
+    // adds all pets from db to array
     public Pet[] getPetsArray() {
         Pet[] pets = new Pet[MAX_PETS];
         int i = 0;
@@ -182,6 +193,7 @@ public class PetManager {
         running = false;
     }
 
+    // run in startStatDecrease thread
     public void decrementStats() {
         // -1 to all stats
         String updateQuery = "UPDATE pets SET hunger = hunger - 1, thirst = thirst - 1, specialStat = specialStat - 1 WHERE hunger > 1 OR thirst > 1 OR specialStat > 1";
@@ -196,9 +208,11 @@ public class PetManager {
         }
     }
 
+    // closes connection to db
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {
+                
                 connection.close();
             }
         } catch (SQLException e) {

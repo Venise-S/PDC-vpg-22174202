@@ -32,6 +32,7 @@ public class PetSelectorPanel extends JPanel {
         JLabel label = new JLabel("Select a pet by clicking on the button:");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);
+        add(Box.createVerticalStrut(guiManager.STRUT_MID_PX));
     }
 
     private void displayPetButtons() {
@@ -42,6 +43,7 @@ public class PetSelectorPanel extends JPanel {
                     break;
                 }
                 addButtonForPet(pet);
+                
             }
         }
     }
@@ -57,6 +59,7 @@ public class PetSelectorPanel extends JPanel {
             }
         });
         add(petButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayBackButton() {
@@ -69,5 +72,6 @@ public class PetSelectorPanel extends JPanel {
             }
         });
         add(backButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 }

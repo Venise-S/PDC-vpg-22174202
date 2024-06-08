@@ -17,6 +17,8 @@ import java.util.Random;
 public class SleepPanel extends JPanel {
 
     private GUIManager guiManager;
+    
+    private final int EVENT_CHANCE = 3;
 
     public SleepPanel(GUIManager guiManager) {
         this.guiManager = guiManager;
@@ -45,17 +47,21 @@ public class SleepPanel extends JPanel {
         add(backButton);
     }
 
+    // chance for event to occur
     private void handleSleepEvent() {
         Random rand = new Random();
-        int eventChance = rand.nextInt(3);
+        int eventChance = rand.nextInt(EVENT_CHANCE);
         if (eventChance == 0) {
+            // no event occurs
             guiManager.showMainMenu();
         } else {
             String eventChosen = guiManager.getVPGame().getEventSelector().randEvent();
             JOptionPane.showMessageDialog(null, "While you were sleeping, " + eventChosen);
             if (eventChosen.contains("a new pet")) {
+                // new pet event chosen
                 guiManager.showNewPet();
             } else {
+                // go to main menu
                 guiManager.showMainMenu();
             }
         }

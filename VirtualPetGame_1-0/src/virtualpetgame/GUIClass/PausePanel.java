@@ -5,22 +5,18 @@
 package virtualpetgame.GUIClass;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
  * @author stamv
  */
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 public class PausePanel extends JPanel {
+
     private final GUIManager guiManager;
-    
+
     private JLabel pauseTitle;
     private JButton continueButton;
     private JButton resetButton;
@@ -36,11 +32,13 @@ public class PausePanel extends JPanel {
         displaySaveButton();
     }
 
+    // methods to show labels and buttons
     private void displayPauseTitle() {
         pauseTitle = new JLabel("Paused Game.");
         pauseTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(Box.createVerticalStrut(20));
+        add(Box.createVerticalStrut(guiManager.STRUT_MID_PX));
         add(pauseTitle);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayContinueButton() {
@@ -51,8 +49,9 @@ public class PausePanel extends JPanel {
                 guiManager.showMainMenu();
             }
         });
-        add(Box.createVerticalStrut(10));
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
         add(continueButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displayResetButton() {
@@ -68,6 +67,7 @@ public class PausePanel extends JPanel {
         });
         add(Box.createVerticalStrut(10));
         add(resetButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 
     private void displaySaveButton() {
@@ -75,11 +75,12 @@ public class PausePanel extends JPanel {
         saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                guiManager.getVPGame().getPetManager().close();
                 System.exit(0);
             }
         });
-        add(Box.createVerticalStrut(10));
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
         add(saveButton);
+        add(Box.createVerticalStrut(guiManager.STRUT_SMALL_PX));
     }
 }
-

@@ -15,9 +15,14 @@ import virtualpetgame.*;
 public class GUIManager {
 
     private final VPGame game;
+    
     private JFrame frame;
     private JPanel panel;
     private CardLayout cardLayout;
+    
+    // for spacing of elements
+    public final int STRUT_MID_PX = 25;
+    public final int STRUT_SMALL_PX = 10;
 
     public VPGame getVPGame() {
         return this.game;
@@ -42,8 +47,9 @@ public class GUIManager {
 
         frame.setVisible(true);
         System.out.println(game.getPetManager().getNumPets());
+        // if on new save, display intro and display new pet panel
         if (game.getPetManager().getNumPets() == 0) {
-            showNewUserIntro();
+            displayIntro();
         } else {
             showMainMenu();
         }
@@ -51,21 +57,23 @@ public class GUIManager {
 
     private void setupFrame() {
         frame = new JFrame("Virtual Pet Game");
+        // use cardlayout to display different panels
         cardLayout = new CardLayout();
         panel = new JPanel(cardLayout);
 
-        frame.setSize(800, 500);
+        frame.setSize(700, 650);
         frame.setTitle("Virtual Pet Game");
         frame.setLocation(500, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
     }
     
-    public void showNewUserIntro() {
+    public void displayIntro() {
         JOptionPane.showMessageDialog(null, "Welcome to Virtual Pet Game. Here you can care for Feline and Canine pets. You'll get started with one now!", "Welcom", JOptionPane.INFORMATION_MESSAGE);
         showNewPet();
     }
 
+    // methods to display different panels
     public void showMainMenu() {
         cardLayout.show(panel, "mainMenu");
     }
