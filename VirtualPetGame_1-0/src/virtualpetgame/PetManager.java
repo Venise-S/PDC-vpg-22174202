@@ -22,7 +22,7 @@ public class PetManager {
     public PetManager() {
         try {
             // for running in jar file: saves db to fixed location
-            /* String dbUrl = "jdbc:derby:" + System.getProperty("user.home") + "/Downloads/22174202-veniseDB/petDB;create=true";*/
+            // String dbUrl = "jdbc:derby:" + System.getProperty("user.home") + "/Downloads/22174202-veniseDB/petDB;create=true";
             // for running in netbeans:
             String dbUrl = "jdbc:derby:petDB;create=true";
             connection = DriverManager.getConnection(dbUrl);
@@ -31,7 +31,7 @@ public class PetManager {
             System.out.println("sql error: " + e.getMessage());
         }
     }
-    
+
     public Connection getConnection() {
         return this.connection;
     }
@@ -49,7 +49,8 @@ public class PetManager {
 
     // drops pet table
     public void resetDatabase() {
-        try (Connection connection = DriverManager.getConnection("jdbc:derby:" + System.getProperty("user.home") + "/Downloads/22174202-veniseDB/petDB;create=true"); Statement statement = connection.createStatement()) {
+        try {
+            Statement statement = connection.createStatement();
             statement.executeUpdate("DROP TABLE pets");
         } catch (SQLException e) {
             System.err.println("sql error: " + e.getMessage());
@@ -212,7 +213,7 @@ public class PetManager {
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {
-                
+
                 connection.close();
             }
         } catch (SQLException e) {

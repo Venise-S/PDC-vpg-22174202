@@ -1,20 +1,7 @@
 ----------------------------------------------------------------
-Sat Jun 08 22:43:30 NZST 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018f-f772-3cb0-00000e767b38 
+Sun Jun 09 13:31:56 NZST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018f-fa9f-9f46-00000e765db8 
 on database directory C:\Users\stamv\OneDrive\Documents\GitHub\PDC-vpgame-22174202\VirtualPetGame_1-0\petDB with class loader sun.misc.Launcher$AppClassLoader@45ee12a7 
-Loaded from file:/C:/Users/stamv/OneDrive/Documents/GitHub/PDC-vpgame-22174202/VirtualPetGame_1-0/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_202-b08
-user.dir=C:\Users\stamv\OneDrive\Documents\GitHub\PDC-vpgame-22174202\VirtualPetGame_1-0
-os.name=Windows 10
-os.arch=amd64
-os.version=10.0
-derby.system.home=null
-Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Sat Jun 08 22:43:50 NZST 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance 52da80c5-018f-f772-3cb0-00000e767b38 
-on database directory C:\Users\stamv\Downloads\22174202-veniseDB\petDB with class loader sun.misc.Launcher$AppClassLoader@45ee12a7 
 Loaded from file:/C:/Users/stamv/OneDrive/Documents/GitHub/PDC-vpgame-22174202/VirtualPetGame_1-0/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_202-b08

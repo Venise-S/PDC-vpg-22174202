@@ -69,7 +69,7 @@ public class GUIManager {
     }
     
     public void displayIntro() {
-        JOptionPane.showMessageDialog(null, "Welcome to Virtual Pet Game. Here you can care for Feline and Canine pets. You'll get started with one now!", "Welcom", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Welcome to Virtual Pet Game. Here you can care for Feline and Canine pets. You'll get started with one now!", "Welcome", JOptionPane.INFORMATION_MESSAGE);
         showNewPet();
     }
 
